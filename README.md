@@ -83,90 +83,67 @@ Endpoints are availble to aquire the Composers' catalog:
 AWS server setup:
 ===============
 
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get finger
-sudo apt-get install  finger
-sudo adduser grader
-finger grader
-cd /etc
-more sudoers.d
-cd sudoers.d/
-ls
-vi grader
-l s-lt
-ls -lt
-chmod 440 grader
-ls -l
-chgrp root grader
-l s-l
-ls -l
-su - grader
-tzconfig
-dpkg-reconfigure tzdata
-more /tec/timezone
-more /etc/timezone
-hwclock
-tzconfig
-dpkg-reconfigure tzdata
-more /etc/timezone
-hwclock
-ufw status
-ufw default deny incoming
-ufw default allow outgoing
-ufw allow 2200/tcp
-ufw allow www\
-ufw allow www
-ufw allow ntp
-ufw status
-netstat -an
-lsof -i TCP:22
-lsof -i TCP:2200
-more /etc/services
-vi /etc/services
-ps aux | grep sshd
-lsof -i | grep sshd
-service ssh restart
-ps aux | grep sshd
-lsof -i | grep sshd
-grep ssh /etc/services
-exit
-init 6
-finger root
-lsof -i | grep ssh
-more /etc/services
-grep 22 /etc/services
-lsof -i | grep ssh
-cd /etc
-cd sshd_con
-cd sshd
-ls
-cd ssh
-ls
-ls -F
-more sshd_config 
-vi sshd_config 
-service ssh restart
-lsof -i | grep ssh
-lsof -i TCP:2200
-lsof -i TCP:22
-exit
+1.) Update all Ubuntu packages:
+    sudo apt-get update
+    sudo apt-get upgrade
+2.) Add udacity users and give sudo privileges:
+    sudo adduser grader
+    sudo adduser student
+    cd /etc/sudoers.d/
+    Add line "grader ALL=(ALL) NOPASSWD:ALL" to individual new sudoers
+    chmod 440 grader
+    chmod 440 student
+3.) Set default time zone to UTC:
+    dpkg-reconfigure tzdata
+    more /etc/timezone
+    hwclock
+4.) Set Ubuntu firewall:
+    ufw status
+    ufw default deny incoming
+    ufw default allow outgoing
+    ufw allow 2200/tcp
+    ufw allow www\
+    ufw allow www
+    ufw allow ntp
+    ufw status
+5.) Set SSH port:
+    netstat -an
+    lsof -i TCP:22
+    lsof -i TCP:2200
+    more /etc/services
+    vi /etc/services
+    ps aux | grep sshd
+    lsof -i | grep sshd
+    service ssh restart
+    ps aux | grep sshd
+    lsof -i | grep sshd
 
 Ensure python packages are installed:
-apt-get install python-sqlalchemy
-apt-get install python-psycopg2
-apt-get install python-httplib2
-apt-get install python-flask
-apt-get install python-oauth2client
+    apt-get install python-sqlalchemy
+    apt-get install python-psycopg2
+    apt-get install python-httplib2
+    apt-get install python-flask
+    apt-get install python-oauth2client
 
 
 Allow AWS server Google+ OAuth:
-https://console.developers.google.com/project
+    https://console.developers.google.com/project
 
 Resources:
-http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
-http://stackoverflow.com/questions/8967216/flask-with-a-webserver-breaks-all-sessions
+    http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
+    http://stackoverflow.com/questions/8967216/flask-with-a-webserver-breaks-all-sessions
 
+Setup WSGI for Apache:
+   Define WSGI to run as "student" in /etc/apache2/sites-enabled/000-default.cong
+        WSGIDaemonProcess catalog python-path=/var/www/html user=student group=student
+	WSGIScriptAlias / /var/www/html/catalog.wsgi
+
+        <Directory /var/www/html>
+            WSGIProcessGroup catalog
+            WSGIApplicationGroup %{GLOBAL}
+            Order deny,allow
+            Allow from all
+        </Directory>
 Adapt project.py:
     File paths to static resources
     Prep Flask 'App' in if __name__ == 'project': section

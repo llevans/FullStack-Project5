@@ -34,7 +34,7 @@ delCompUrl = "/era/<string:era_name>/<string:composer_name>/delete"
 tokenExpErr = "Token expired or revoked"
 
 # Generate unique client id
-secretsFile = 'html/client_secrets.json'
+secretsFile = '/var/www/html/client_secrets.json'
 CLIENT_ID = json.loads(open(secretsFile, 'r').read())['web']['client_id']
 app = Flask(__name__)
 
