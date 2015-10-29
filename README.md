@@ -136,27 +136,27 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr/E7atdyUpRwp6gQgN2rW3iZA3+dUt+0ltrKq+wKS
 
 Functions are available to manage the Composers' catalog:
   1. List all Composers
-        - http://localhost:5000/
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/
   2. List Composers in a specific era 
-        - http://localhost:5000/era/Classical/composers
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/Classical/composers
   3. View Composer's detail 
-        - http://localhost:5000/era/Classical/Wolfgang%2520Amadeus%2520Mozart
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/Classical/Wolfgang%2520Amadeus%2520Mozart
   4. Add a new Composer
-        - http://localhost:5000/era/composer/new
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/composer/new
   5. Edit Composer's name, description and era
-        - http://localhost:5000/era/Contemporary/Conrad%20Tao/edit
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/Contemporary/Conrad%20Tao/edit
   6. Delete a Composer
-        - http://localhost:5000/era/Contemporary/Conrad%20Tao/delete
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/Contemporary/Conrad%20Tao/delete
 
 
 Endpoints are availble to aquire the Composers' catalog:
   1. Atom Composers List 
-        - http://localhost:5000/composers.atom
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/composers.atom
   2. Json Era Full List 
-        - http://localhost:5000/era/list/JSON
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/list/JSON
   3. Json Composers per Era List 
-        - http://localhost:5000/era/1/list/JSON
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/1/list/JSON
   4. Json Composer Detail
-        - http://localhost:5000/era/1/composer/7/JSON
+        - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/1/composer/7/JSON
 
 
