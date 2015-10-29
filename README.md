@@ -85,9 +85,14 @@ Setup WSGI for Apache:
             Order deny,allow
             Allow from all
         </Directory>
-
+       
 Restart Apache 2 server once Catalog app is configured
 apache2ctl restart
+
+Hide ".git|.svn" subdirectories:
+       Enable Apache Rewrite :  sudo a2enmod rewrite
+       Add to VirutalHost : 
+	RedirectMatch 404 /\.(svn|git)(/|$)
 
 Adapt project.py:
     Create catalog.wsgi to import Flask Python module
