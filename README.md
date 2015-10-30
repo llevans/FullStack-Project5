@@ -4,114 +4,121 @@ README
 Catalog CRUD project - AWS-EC2, WSGI
 ------------------------------------
 
-This application is a Python webmodule used to manage a catalog of classical music composers.
+This application is a Python web module used to manage a catalog of classical music composers. It is running on an Apache 2 instance that serves Python scripts via WSGI. The Composer's catalog is maintained in PostgreSQL persistent storage.
 
 The application has been deployed to the AWS EC2 cloud on server 54.200.65.136.
-A user named 'grader' has been setup on the AWS EC2 server, SSH public key information is include below.
+A Udacity user named 'grader' has been setup on the AWS EC2 server, SSH public key information is include below.
 
 Steps to login to the remote EC2 server:
-    Copy the SSH private key for 'grader' into ~/.ssh/udacity_grader
-    SSH to the development server using command : 'ssh -i ~/.ssh/udacity_grader grader@54.200.65.136  -p 2200'
+  * Copy the SSH private key for 'grader' into ~/.ssh/udacity_grader
+  * SSH to the development server using command : 
+    * `ssh -i ~/.ssh/udacity_grader grader@54.200.65.136  -p 2200`
 
-The web application is available at url "http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/"
+The Python Catalog application is available at url http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/
 
 The appplication authenticates using Google+ OAuth services.
+The user can view Composers listed in the Catalog, see details such as
+name, description and era. Once logged in, the user can edit, add and
+delete Composers from the catalog.
 
-AWS server setup:
-===============
-
-1.) Update all Ubuntu packages:
-    sudo apt-get update
-    sudo apt-get upgrade
-2.) Add udacity users and give sudo privileges:
-    sudo adduser grader
-    sudo adduser student
-    cd /etc/sudoers.d/
-    Add line "grader ALL=(ALL) NOPASSWD:ALL" to individual new sudoers
-    chmod 440 grader
-    chmod 440 student
-3.) Generate SSH keys for Udacity grader:
-    ssh-keygen -f ~/.ssh/udacity_grader
-    Copy public key from ~/.ssh/udacity_grader.pub into /home/grader/authorized_keys on ec2 server
-4.) Set default time zone to UTC:
-    dpkg-reconfigure tzdata
-    more /etc/timezone
-    hwclock
-5.) Set Ubuntu firewall:
-    ufw status
-    ufw default deny incoming
-    ufw default allow outgoing
-    ufw allow 2200/tcp
-    ufw allow www\
-    ufw allow www
-    ufw allow ntp
-    ufw status
-6.) Set SSH port:
-    netstat -an
-    lsof -i TCP:22
-    lsof -i TCP:2200
-    more /etc/services
-    vi /etc/services
-    ps aux | grep sshd
-    lsof -i | grep sshd
-    service ssh restart
-    ps aux | grep sshd
-    lsof -i | grep sshd
-7.) Install packages
-    apt-get install apache2
-    apt-get install libapache2-mod-wsgi
-    apt-get install postgresql
-    apt-get install git
-
-Ensure python packages are installed:
-    apt-get install python-sqlalchemy
-    apt-get install python-psycopg2
-    apt-get install python-httplib2
-    apt-get install python-flask
-    apt-get install python-oauth2client
+AWS server configuration:
+=========================
+1. Update all Ubuntu packages:
+   1. sudo apt-get update
+   2. sudo apt-get upgrade
+2. Add Udacity users and give sudo privileges:
+   1. sudo adduser grader
+   2. sudo adduser student
+   3. cd /etc/sudoers.d/
+   4. Add line "**** ALL=(ALL) NOPASSWD:ALL" to individual new sudoer files
+   5. chmod 440 grader
+   6. chmod 440 student
+3. SSH keys were generated for the Udacity grader:
+   1. ssh-keygen -f ~/.ssh/udacity_grader
+   2. Copy public key from ~/.ssh/udacity_grader.pub into /home/grader/authorized_keys on ec2 server
+4. Set default time zone to UTC:
+   1. dpkg-reconfigure tzdat
+   2. more /etc/timezone
+   3. hwclock
+5. Set Ubuntu uncomplicated firewall:
+   1. ufw status
+   2. ufw default deny incoming
+   3. ufw default allow outgoing
+   4. ufw allow 2200/tcp
+   5. ufw allow www
+   6. ufw allow ntp
+   7. ufw status
+6. Set SSH port tp 2200:
+   1. netstat -an
+   2. lsof -i TCP:22
+   3. lsof -i TCP:2200
+   4. more /etc/services
+   5. vi /etc/services
+   6. ps aux | grep sshd
+   7. lsof -i | grep sshd
+   8. service ssh restart
+   9. ps aux | grep sshd
+   10. lsof -i | grep sshd
+7. Install Apache2 and PostgreSQL:
+   1. apt-get install apache2
+   2. apt-get install libapache2-mod-wsgi
+   3. apt-get install postgresql
+   4. apt-get install git
 
 
-Prepare the Postgres database
-        After connecting to the VM ('vagrant ssh'), move to the ~/vagrant subdirectory
-           'cd ~/{ .. }/vagrant'
-        run python scripts to setup the composer's catalog (database)
-           'python db_setup.py'
-           'python db_populate.py'
-
-Setup WSGI for Apache:
-   Define WSGI to run as "student" in /etc/apache2/sites-enabled/000-default.cong
-        WSGIDaemonProcess catalog python-path=/var/www/html user=student group=student
-	WSGIScriptAlias / /var/www/html/catalog.wsgi
-
+Prep Python and PostgreSQL
+==========================
+1. Install necessary Python packages:
+   1. apt-get install python-sqlalchemy
+   2. apt-get install python-psycopg2
+   3. apt-get install python-httplib2
+   4. apt-get install python-flask
+   5. apt-get install python-oauth2client
+2. Run python scripts to setup and populate the database:
+   1. python db_setup.py
+   2. python db_populate.py
+3. Enable WSGI for Apache in /etc/apache2/sites-enabled/000-default.conf:
+   1. Define WSGI to run as "student": 
+       1. `WSGIDaemonProcess catalog python-path=/var/www/html user=student group=student`
+	2. Add WSGI Virtual Host directive:
+	   1. `WSGIScriptAlias / /var/www/html/catalog.wsgi
         <Directory /var/www/html>
             WSGIProcessGroup catalog
             WSGIApplicationGroup %{GLOBAL}
             Order deny,allow
             Allow from all
-        </Directory>
+        </Directory>`
        
-Restart Apache 2 server once Catalog app is configured
-apache2ctl restart
+4. Restart Apache 2 server once WSGI is configured:
+   1. apache2ctl restart
 
-Hide ".git|.svn" subdirectories:
-       Enable Apache Rewrite :  sudo a2enmod rewrite
-       Add to VirutalHost : 
-	RedirectMatch 404 /\.(svn|git)(/|$)
+5. Hide ".git|.svn" subdirectories:
+    1. Enable Apache Rewrite :  
+       1. `sudo a2enmod rewrite`
+    2. Add to VirutalHost (000-default.conf): 
+	   1. `RewriteEngine on`
+	   2. `RedirectMatch 404 /\.(svn|git)(/|$)`
 
-Adapt project.py:
-    Create catalog.wsgi to import Flask Python module
-    Prep Flask 'App' in if __name__ == 'project': section
+6. Adapt project.py to run as WSGI script:
+    1. Create catalog.wsgi to import Flask  "project" module
+    2. Prep Flask 'App' in `if __name__ == 'project'` project.py main section
+    3. Fully qualify the filesystem location of `client_secrets.json`
 
 
 Allow AWS server Google+ OAuth:
+===============================
+    1. Add AWS-EC2 URL as allowed URL for ComposersCatalogApp at
     https://console.developers.google.com/project
 
-Resources:
-    http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
-    http://stackoverflow.com/questions/8967216/flask-with-a-webserver-breaks-all-sessions
-    http://stackoverflow.com/questions/10861260/how-to-create-user-for-a-db-in-postgresql
+Resources
+=========
+   1. I utilized these sites to troubleshoot my Apache2/WSGI web server configuration:
+      1. http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
+      2. http://stackoverflow.com/questions/8967216/flask-with-a-webserver-breaks-all-sessions
+      3. http://stackoverflow.com/questions/10861260/how-to-create-user-for-a-db-in-postgresql
 
 Grader SSH private key (udacity_grader):
+========================================
 -----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAq/xO2rXclKUcKeoEIDdq1t4mQN/nVLftJbayqvsCkjfuRqmr
 vS8z//B1xrXQ7V6hXdiR2W6Q+S5+cYZQYYjd2rSjGWgeBKHbj+dTqbw66fn4ISTj
@@ -141,8 +148,11 @@ DLWgalTXvwqUTT8sqBjciZTY5UlAgpBbk5ErLep94lnELXcCK3l6yjQbWLIXa74R
 -----END RSA PRIVATE KEY-----
 
 Grader SSH public key (udacity_grader.pub):
+===========================================
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr/E7atdyUpRwp6gQgN2rW3iZA3+dUt+0ltrKq+wKSN+5Gqau9LzP/8HXGtdDtXqFd2JHZbpD5Ln5xhlBhiN3atKMZaB4EoduP51OpvDrp+fghJONeKtQ7mNaS1Xd8hNdVXYuVpueJD7rR9ex85BOF/g/KBWMQOjHZbAoYFATp4kNwqOrgRFc2Tro8iyod8jK+kaDQoCihz/nFVMZuj1rxtRAKWbICFI1tp9HkvJAo/gPu6Xx46E9woxFgm25FYXu26gavt3sZ2vcWtVjEP62/grD0veUdmVCEqgbeuz7kvoG6sIb76Mq/XpirGk2sumQDGXfRDRiWLlbNd/DKmLxh lynevans@C02MJ78FFD57
 
+Catalog Application Description
+===============================
 Functions are available to manage the Composers' catalog:
   1. List all Composers
         - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/
@@ -167,5 +177,4 @@ Endpoints are availble to aquire the Composers' catalog:
         - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/1/list/JSON
   4. Json Composer Detail
         - http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/era/1/composer/7/JSON
-
 
