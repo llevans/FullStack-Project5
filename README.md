@@ -4,10 +4,14 @@ README
 Catalog CRUD project - AWS-EC2, WSGI
 ------------------------------------
 
-This application is a python webmodule used to manage a catalog of classical music composers.
+This application is a Python webmodule used to manage a catalog of classical music composers.
 
 The application has been deployed to the AWS EC2 cloud on server 54.200.65.136.
 A user named 'grader' has been setup on the AWS EC2 server, SSH public key information is include below.
+
+Steps to login to the remote EC2 server:
+    Copy the SSH private key for 'grader' into ~/.ssh/udacity_grader
+    SSH to the development server using command : 'ssh -i ~/.ssh/udacity_grader grader@54.200.65.136  -p 2200'
 
 The web application is available at url "http://ec2-54-200-65-136.us-west-2.compute.amazonaws.com/"
 
