@@ -77,7 +77,10 @@ Prep Python and PostgreSQL
 2. Run python scripts to setup and populate the database:
    1. python db_setup.py
    2. python db_populate.py
-3. Enable WSGI for Apache in /etc/apache2/sites-enabled/000-default.conf:
+
+Prep Catalog App in Apache WSGI
+================================
+1. Enable WSGI for Apache in /etc/apache2/sites-enabled/000-default.conf:
    1. Define WSGI to run as "student": 
        1. `WSGIDaemonProcess catalog python-path=/var/www/html user=student group=student`
 	2. Add WSGI Virtual Host directive:
@@ -89,17 +92,17 @@ Prep Python and PostgreSQL
             Allow from all
         </Directory>`
        
-4. Restart Apache 2 server once WSGI is configured:
+2. Restart Apache 2 server once WSGI is configured:
    1. apache2ctl restart
 
-5. Hide ".git|.svn" subdirectories:
+3. Hide ".git|.svn" subdirectories:
     1. Enable Apache Rewrite :  
        1. `sudo a2enmod rewrite`
     2. Add to VirutalHost (000-default.conf): 
 	   1. `RewriteEngine on`
 	   2. `RedirectMatch 404 /\.(svn|git)(/|$)`
 
-6. Adapt project.py to run as WSGI script:
+4. Adapt project.py to run as WSGI script:
     1. Create catalog.wsgi to import Flask  "project" module
     2. Prep Flask 'App' in `if __name__ == 'project'` project.py main section
     3. Fully qualify the filesystem location of `client_secrets.json`
